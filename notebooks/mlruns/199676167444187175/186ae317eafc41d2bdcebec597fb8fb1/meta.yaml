@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/gouri/MLops/sp25_taxi-main/notebooks/mlruns/199676167444187175/186ae317eafc41d2bdcebec597fb8fb1/artifacts
+end_time: 1741198209353
+entry_point_name: ''
+experiment_id: '199676167444187175'
+lifecycle_stage: active
+run_id: 186ae317eafc41d2bdcebec597fb8fb1
+run_name: placid-shrew-18
+run_uuid: 186ae317eafc41d2bdcebec597fb8fb1
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1741198173958
+status: 4
+tags: []
+user_id: gouri
