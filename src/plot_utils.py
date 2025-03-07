@@ -12,7 +12,7 @@ def plot_aggregated_time_series(
     predictions: Optional[pd.Series] = None,
 ):
     """
-    Plots the time series data for a specific location from NYC taxi data.
+    Plots the time series data for a specific row in the features DataFrame.
 
     Args:
         features (pd.DataFrame): DataFrame containing feature data, including historical ride counts and metadata.
@@ -23,11 +23,16 @@ def plot_aggregated_time_series(
     Returns:
         plotly.graph_objects.Figure: A Plotly figure object showing the time series plot.
     """
-    # Extract the specific location's features and target
-    # location_features = features[features["pickup_location_id" == row_id]]
-    # actual_target = targets[targets["pickup_location_id" == row_id]]
-    location_features = features.iloc[row_id]
-    actual_target = targets.iloc[row_id]
+    # Check if the row_id exists in the DataFrame index
+    if row_id not in features.index:
+        raise ValueError(f"No data found for row_id: {row_id}. Please provide a valid row_id.")
+
+    # Extract the specific row's features
+    location_features = features.loc[row_id]
+
+    # Extract the corresponding target value using the index
+    actual_target = targets.loc[row_id]
+
     # Identify time series columns (e.g., historical ride counts)
     time_series_columns = [
         col for col in features.columns if col.startswith("rides_t-")
@@ -38,8 +43,7 @@ def plot_aggregated_time_series(
 
     # Generate corresponding timestamps for the time series
     time_series_dates = pd.date_range(
-        start=location_features["pickup_hour"]
-        - timedelta(hours=len(time_series_columns)),
+        start=location_features["pickup_hour"] - timedelta(hours=len(time_series_columns)),
         end=location_features["pickup_hour"],
         freq="h",
     )
@@ -59,7 +63,7 @@ def plot_aggregated_time_series(
 
     # Add the actual target value as a green marker
     fig.add_scatter(
-        x=time_series_dates[-1:],  # Last timestamp
+        x=[time_series_dates[-1]],  # Last timestamp
         y=[actual_target],  # Actual target value
         line_color="green",
         mode="markers",
@@ -69,11 +73,10 @@ def plot_aggregated_time_series(
 
     # Optionally add the prediction as a red marker
     if predictions is not None:
+        predicted_value = predictions.loc[row_id]
         fig.add_scatter(
-            x=time_series_dates[-1:],  # Last timestamp
-            y=predictions[
-                predictions["pickup_location_id" == row_id]
-            ],  # Predicted value
+            x=[time_series_dates[-1]],  # Last timestamp
+            y=[predicted_value],  # Predicted value
             line_color="red",
             mode="markers",
             marker_symbol="x",
@@ -82,7 +85,6 @@ def plot_aggregated_time_series(
         )
 
     return fig
-
 
 def plot_prediction(features: pd.DataFrame, prediction: int):
     # Identify time series columns (e.g., historical ride counts)

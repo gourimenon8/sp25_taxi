@@ -14,8 +14,6 @@ def set_mlflow_tracking():
     Set up MLflow tracking server credentials and URI.
     """
     uri = os.environ["MLFLOW_TRACKING_URI"]
-    # username = os.environ["MLFLOW_TRACKING_USERNAME"]
-    # password = os.environ["MLFLOW_TRACKING_PASSWORD"]
     mlflow.set_tracking_uri(uri)
     logger.info("MLflow tracking URI and credentials set.")
 
